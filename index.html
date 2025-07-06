@@ -2,13 +2,19 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Risk Matrix</title>
+  <title>Riskimatriisi</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: Arial, sans-serif; display: flex; gap: 30px; padding: 20px; }
     .matrix, .chart { flex: 1; }
     table { border-collapse: collapse; }
-    td, th { width: 80px; height: 50px; text-align: center; border: 1px solid #ccc; }
+    td, th { 
+  width: 80px; 
+  height: 50px; 
+  text-align: center; 
+  border: 1px solid #ccc; 
+  font-weight: normal; /* MUOKATTU */
+}
     .risk-lowest { background-color: #006644; color: white; font-weight: bold; }
     .risk-moderate { background-color: #ffab00; font-weight: bold; }
     .risk-high { background-color: #de350b; color: white; font-weight: bold; }
@@ -60,7 +66,7 @@
         <td class="risk-moderate">1</td>
       </tr>
       <tr>
-        <th>Havinainen</th>
+        <th>Harvinainen</th>
         <td class="risk-lowest">1</td>
         <td class="neutral">0</td>
         <td class="neutral">0</td>
@@ -80,19 +86,22 @@
         data: {
           labels: ['High', 'Lowest', 'Moderate'],
           datasets: [{
-            data: [1, 1, 3],
+            data: [20, 20, 60],
             backgroundColor: ['#de350b', '#006644', '#ffab00'],
           }]
         },
         options: {
-          plugins: {
-            legend: {
-              position: 'top'
-            }
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            font: { size: 14 } // MUOKATTU
           }
         }
-      });
-    </script>
+      }
+    }
+  });
+</script>
   </div>
 </body>
 </html>
