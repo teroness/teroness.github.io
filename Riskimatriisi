@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Risk Matrix</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; display: flex; gap: 30px; padding: 20px; }
+    .matrix, .chart { flex: 1; }
+    table { border-collapse: collapse; }
+    td, th { width: 80px; height: 50px; text-align: center; border: 1px solid #ccc; }
+    .risk-lowest { background-color: #006644; color: white; font-weight: bold; }
+    .risk-moderate { background-color: #ffab00; font-weight: bold; }
+    .risk-high { background-color: #de350b; color: white; font-weight: bold; }
+    .neutral { background-color: #e5e5e5; }
+  </style>
+</head>
+<body>
+  <div class="matrix">
+    <h3>Risk matrix</h3>
+    <table>
+      <tr>
+        <th></th>
+        <th>Insignificant</th>
+        <th>Low</th>
+        <th>Moderate</th>
+        <th>Major</th>
+        <th>Severe</th>
+      </tr>
+      <tr>
+        <th>Certain</th>
+        <td class="neutral">0</td>
+        <td class="risk-moderate">1</td>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+      </tr>
+      <tr>
+        <th>Likely</th>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+      </tr>
+      <tr>
+        <th>Possible</th>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+        <td class="risk-moderate">1</td>
+        <td class="risk-high">1</td>
+        <td class="neutral">0</td>
+      </tr>
+      <tr>
+        <th>Unlikely</th>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+        <td class="risk-moderate">1</td>
+      </tr>
+      <tr>
+        <th>Rare</th>
+        <td class="risk-lowest">1</td>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+        <td class="neutral">0</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="chart">
+    <h3>Risk levels</h3>
+    <canvas id="riskChart" width="300" height="300"></canvas>
+    <script>
+      const ctx = document.getElementById('riskChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['High', 'Lowest', 'Moderate'],
+          datasets: [{
+            data: [1, 1, 3],
+            backgroundColor: ['#de350b', '#006644', '#ffab00'],
+          }]
+        },
+        options: {
+          plugins: {
+            legend: {
+              position: 'top'
+            }
+          }
+        }
+      });
+    </script>
+  </div>
+</body>
+</html>
