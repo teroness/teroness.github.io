@@ -1,107 +1,344 @@
 <!DOCTYPE html>
-<html>
+<html lang="fi">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Riskimatriisi</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; display: flex; gap: 30px; padding: 20px; }
-    .matrix, .chart { flex: 1; }
-    table { border-collapse: collapse; }
-    td, th { 
-  width: 80px; 
-  height: 50px; 
-  text-align: center; 
-  border: 1px solid #ccc; 
-  font-weight: normal; /* MUOKATTU */
-}
-    .risk-lowest { background-color: #006644; color: white; font-weight: bold; }
-    .risk-moderate { background-color: #ffab00; font-weight: bold; }
-    .risk-high { background-color: #de350b; color: white; font-weight: bold; }
-    .neutral { background-color: #e5e5e5; }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f3f6;
+      color: #1c2b49;
+      margin: 0;
+      padding: 40px;
+    }
+    .grid4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 16px;
+      justify-items: center;
+      align-items: center;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+    .box {
+      background: #fff;
+      border-radius: 22px;
+      box-shadow: 0 0 18px #0001;
+      padding: 22px 10px 8px 10px;
+      min-width: 520px;
+      max-width: 700px;
+      width: 100%;
+      height: 370px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+    }
+    .title-center {
+      text-align: center;
+      font-size: 23px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      margin-top: 0;
+      width: 100%;
+      letter-spacing: 0.01em;
+      color: #1c2b49;
+    }
+    .risk-matrix-container { width: 100%; align-items: center; }
+    .risk-matrix-wrapper {
+      display: flex; flex-direction: row; align-items: center; justify-content: center;
+    }
+    .risk-matrix {
+      border-collapse: separate;
+      border-spacing: 6px;
+      margin: 0 auto;
+    }
+    .risk-matrix th, .risk-matrix td {
+      width: 48px; height: 27px; text-align: center; font-size: 14px; font-weight: 600;
+      border-radius: 7px; background-color: #dfe2e6; padding: 0; box-sizing: border-box;
+    }
+    .risk-matrix th {
+      background-color: transparent; border-radius: 0; font-weight: 600; font-size: 14px;
+      min-width: 80px; text-align: left; padding-right: 7px;
+    }
+    .risk-matrix td.low    { background-color: #006644; color: #fff; }
+    .risk-matrix td.medium { background-color: #ffab00; color: #061938; }
+    .risk-matrix td.high   { background-color: #de350b; color: #fff; }
+    .risk-matrix tfoot td {
+      background: none !important; font-weight: bold; padding-top: 6px; font-size: 12px;
+      border-radius: 0; text-align: center; color: #1c2b49;
+    }
+    .y-axis-label {
+      writing-mode: vertical-rl; transform: rotate(180deg); font-size: 14px; color: #1c2b49;
+      margin-right: 7px; font-weight: 700; text-align: center; letter-spacing: 1px; display: flex; align-items: center;
+    }
+    .x-axis-label {
+      text-align: center;
+      margin-top: 3px;
+      font-size: 13px;
+      color: #1c2b49;
+      font-weight: 700;
+      width: 100%;
+      margin-left: 110px;
+    }
+    .legend {
+      display: flex; justify-content: center; gap: 12px; margin: 12px 0 0 0; font-size: 14px; font-weight: 600;
+    }
+    .legend div { display: flex; align-items: center; gap: 5px; }
+    .legend span {
+      display: inline-block; width: 14px; height: 14px; border-radius: 2px;
+    }
+    .legend .high { background-color: #de350b; }
+    .legend .medium { background-color: #ffab00; }
+    .legend .low { background-color: #006644; }
+    .legend .merkittava { background-color: #ff6a00; }
+    .legend .vahainen { background-color: #00875A; }
+    @media (max-width: 1200px) {
+      .grid4 { grid-template-columns: 1fr; gap: 20px; }
+      .box { max-width: 98vw; min-width: 0; width: 100%; height: auto; min-height: 270px; }
+      .x-axis-label { margin-left: 30px; }
+    }
   </style>
 </head>
 <body>
-  <div class="matrix">
-    <h3>Riskimatriisi</h3>
-    <table>
-      <tr>
-        <th></th>
-        <th>Merkityksetön</th>
-        <th>Vähäinen</th>
-        <th>Kohtalainen</th>
-        <th>Merkittävä</th>
-        <th>Vakava</th>
-      </tr>
-      <tr>
-        <th>Varma</th>
-        <td class="neutral">0</td>
-        <td class="risk-moderate">1</td>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-      </tr>
-      <tr>
-        <th>Todennäköinen</th>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-      </tr>
-      <tr>
-        <th>Mahdollinen</th>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-        <td class="risk-moderate">1</td>
-        <td class="risk-high">1</td>
-        <td class="neutral">0</td>
-      </tr>
-      <tr>
-        <th>Epätodennäköinen</th>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-        <td class="risk-moderate">1</td>
-      </tr>
-      <tr>
-        <th>Harvinainen</th>
-        <td class="risk-lowest">1</td>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-        <td class="neutral">0</td>
-      </tr>
-    </table>
+  <div class="grid4">
+    <!-- Riskimatriisi -->
+    <div class="box">
+      <div class="title-center">Riskimatriisi</div>
+      <div class="risk-matrix-container">
+        <div class="risk-matrix-wrapper">
+          <div class="y-axis-label">Todennäköisyys</div>
+          <table class="risk-matrix">
+            <tbody>
+              <tr>
+                <th>Varma</th>
+                <td>0</td>
+                <td class="medium">1</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="high">1</td>
+              </tr>
+              <tr>
+                <th>Todennäköinen</th>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <th>Mahdollinen</th>
+                <td>0</td>
+                <td>0</td>
+                <td class="medium">1</td>
+                <td class="high">1</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <th>Epätodennäköinen</th>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="high">1</td>
+              </tr>
+              <tr>
+                <th>Harvinainen</th>
+                <td class="low">1</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td></td>
+                <td>Merkityksetön</td>
+                <td>Vähäinen</td>
+                <td>Kohtalainen</td>
+                <td>Merkittävä</td>
+                <td>Vakava</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="x-axis-label">Vaikutus</div>
+      </div>
+    </div>
+    <!-- Donitsi -->
+    <div class="box">
+      <div class="title-center">Riskitasot</div>
+      <div class="legend" style="margin-bottom:12px;">
+        <div><span class="high"></span> Korkea</div>
+        <div><span class="medium"></span> Kohtalainen</div>
+        <div><span class="low"></span> Matala</div>
+      </div>
+      <canvas id="donutChart" style="width:92%;height:78%;max-width:310px;max-height:210px;display:block;margin:0 auto;"></canvas>
+    </div>
+    <!-- Pylväskaavio -->
+    <div class="box">
+      <div class="title-center">Riskien status-jakauma</div>
+      <canvas id="riskBarChart" style="width:92%;height:78%;max-width:410px;max-height:210px;"></canvas>
+      <div class="legend">
+        <div><span class="low"></span> Matala</div>
+        <div><span class="medium"></span> Kohtalainen</div>
+        <div><span class="high"></span> Korkea</div>
+      </div>
+    </div>
+    <!-- Viivakaavio -->
+    <div class="box">
+      <div class="title-center">Riskitasojen kehitys kuukausittain</div>
+      <canvas id="riskTrendChart" style="width:92%;height:78%;max-width:410px;max-height:210px;"></canvas>
+      <div class="legend">
+        <div><span class="vahainen"></span> Vähäinen</div>
+        <div><span class="medium"></span> Kohtalainen</div>
+        <div><span class="merkittava"></span> Merkittävä</div>
+        <div><span class="high"></span> Vakava</div>
+      </div>
+    </div>
   </div>
+<script>
+  // Donitsikaavio
+  const ctx = document.getElementById('donutChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Korkea', 'Kohtalainen', 'Matala'],
+      datasets: [{
+        data: [3, 2, 1],
+        backgroundColor: ['#de350b', '#ffab00', '#006644'],
+        borderWidth: 0
+      }]
+    },
+    options: { cutout: '60%', plugins: { legend: { display: false } } }
+  });
 
-  <div class="chart">
-    <h3>Riskitasot</h3>
-    <canvas id="riskChart" width="300" height="300"></canvas>
-    <script>
-      const ctx = document.getElementById('riskChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['High', 'Lowest', 'Moderate'],
-          datasets: [{
-            data: [20, 20, 60],
-            backgroundColor: ['#de350b', '#006644', '#ffab00'],
-          }]
+  // Pylväskaavio
+  const ctxBar = document.getElementById('riskBarChart').getContext('2d');
+  new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+      labels: ['Havaittu', 'Käynnissä', 'Keskeytetty', 'Käsitelty', 'Vähennetty'],
+      datasets: [
+        { label: 'Korkea', data: [2, 1, 0, 1, 0], backgroundColor: '#de350b', stack: 'risk' },
+        { label: 'Kohtalainen', data: [1, 2, 1, 0, 0], backgroundColor: '#ffab00', stack: 'risk' },
+        { label: 'Matala', data: [1, 1, 1, 0, 1], backgroundColor: '#006644', stack: 'risk' }
+      ]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      responsive: false,
+      maintainAspectRatio: false,
+      layout: { padding: 0 },
+      scales: {
+        x: {
+          stacked: true,
+          grid: { display: false },
+          ticks: { font: { size: 15, weight: 700 }, padding: 3, maxRotation: 0, minRotation: 0 }
         },
-        options: {
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: {
-            font: { size: 14 } // MUOKATTU
-          }
+        y: {
+          stacked: true,
+          grid: { color: "#eee" },
+          ticks: { display: true, font: { size: 13, weight: 700 }, color: "#68738c", stepSize: 1, beginAtZero: true },
+          beginAtZero: true,
+          suggestedMax: 4
+        }
+      }
+    }
+  });
+
+  // Viivakaavio kuukausikehitykselle - prosenttiosuudet
+  const allData = {
+    'Vähäinen':   [2, 2, 3, 4, 2, 1, 2],
+    'Kohtalainen':[1, 1, 2, 2, 3, 2, 2],
+    'Merkittävä': [0, 1, 1, 2, 1, 2, 3],
+    'Vakava':     [0, 0, 1, 1, 1, 1, 2]
+  };
+  const months = ['2024-01', '2024-02', '2024-03', '2024-04', '2024-05', '2024-06', '2024-07'];
+  function prosenttiarvot(sarja) {
+    return months.map((_, i) => {
+      let summa = Object.values(allData).reduce((acc, d) => acc + d[i], 0);
+      return summa > 0 ? +(100 * allData[sarja][i] / summa).toFixed(1) : 0;
+    });
+  }
+  const trendData = {
+    labels: months,
+    datasets: [
+      {
+        label: 'Vähäinen',
+        data: prosenttiarvot('Vähäinen'),
+        fill: false,
+        borderColor: '#00875A',
+        backgroundColor: '#00875A',
+        tension: 0.3,
+        pointRadius: 4,
+        pointBackgroundColor: '#00875A',
+        pointBorderColor: '#fff'
+      },
+      {
+        label: 'Kohtalainen',
+        data: prosenttiarvot('Kohtalainen'),
+        fill: false,
+        borderColor: '#FFAB00',
+        backgroundColor: '#FFAB00',
+        tension: 0.3,
+        pointRadius: 4,
+        pointBackgroundColor: '#FFAB00',
+        pointBorderColor: '#fff'
+      },
+      {
+        label: 'Merkittävä',
+        data: prosenttiarvot('Merkittävä'),
+        fill: false,
+        borderColor: '#FF6A00',
+        backgroundColor: '#FF6A00',
+        tension: 0.3,
+        pointRadius: 4,
+        pointBackgroundColor: '#FF6A00',
+        pointBorderColor: '#fff'
+      },
+      {
+        label: 'Vakava',
+        data: prosenttiarvot('Vakava'),
+        fill: false,
+        borderColor: '#DE350B',
+        backgroundColor: '#DE350B',
+        tension: 0.3,
+        pointRadius: 4,
+        pointBackgroundColor: '#DE350B',
+        pointBorderColor: '#fff'
+      }
+    ]
+  };
+  const riskTrendCtx = document.getElementById('riskTrendChart').getContext('2d');
+  new Chart(riskTrendCtx, {
+    type: 'line',
+    data: trendData,
+    options: {
+      responsive: false,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          title: { display: true, text: 'Kuukausi', font: { size: 14, weight: 700 } },
+          ticks: { font: { size: 13, weight: 700 } }
+        },
+        y: {
+          beginAtZero: true,
+          min: 0,
+          max: 100,
+          title: { display: true, text: 'Osuus kaikista riskeistä (%)', font: { size: 13, weight: 700 } },
+          ticks: { font: { size: 13, weight: 700 }, callback: function(value) { return value + '%' } }
         }
       }
     }
   });
 </script>
-  </div>
 </body>
 </html>
