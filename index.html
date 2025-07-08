@@ -12,6 +12,66 @@
       margin: 0;
       padding: 40px;
     }
+    /* Yläpalkin summary-kortit */
+    .dashboard-cards {
+      display: flex;
+      gap: 28px;
+      margin-bottom: 40px;
+      margin-left: auto;
+      margin-right: auto;
+      justify-content: flex-start;
+      max-width: 2900px;
+    }
+    .dashboard-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px #d9dbe3;
+      padding: 28px 32px 18px 32px;
+      min-width: 300px;
+      max-width: 350px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      border: 1.5px solid #f0f2f7;
+      box-sizing: border-box;
+      transition: box-shadow 0.18s;
+    }
+    .dashboard-card:hover {
+      box-shadow: 0 4px 24px #bfc2d8;
+      border: 1.5px solid #e6e9f1;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #122040;
+      letter-spacing: 0.01em;
+    }
+    .card-icon {
+      font-size: 27px;
+      opacity: 0.7;
+      margin-left: 9px;
+    }
+    .card-value {
+      font-size: 41px;
+      font-weight: 800;
+      margin: 8px 0 3px 0;
+      color: #1a2135;
+      letter-spacing: 0.01em;
+    }
+    .card-desc {
+      font-size: 17px;
+      color: #8a99b7;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    /* Nelikenttä */
     .grid4 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -49,7 +109,7 @@
       letter-spacing: 0.01em;
       color: #1c2b49;
     }
-    /* PIENENNETTY RISKI MATRIISI */
+    /* Riskimatriisi */
     .risk-matrix-container { width: 100%; align-items: center; }
     .risk-matrix-wrapper {
       display: flex; flex-direction: row; align-items: center; justify-content: center;
@@ -98,9 +158,52 @@
     .legend .matala { background-color: #006644; }
     .legend .kohtalainen { background-color: #ffab00; }
     .legend .korkea { background-color: #de350b; }
+    @media (max-width: 1200px) {
+      .dashboard-cards { flex-direction: column; gap: 16px; }
+      .dashboard-card { max-width: 99vw; min-width: 0; width: 100%; }
+      .grid4 { grid-template-columns: 1fr; gap: 20px; }
+      .box { max-width: 99vw; min-width: 0; width: 100%; height: auto; min-height: 340px; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- YLÄPALKIN DASHBOARD -->
+  <div class="dashboard-cards">
+    <div class="dashboard-card">
+      <div class="card-header">
+        <span class="card-title">Riskejä yhteensä</span>
+        <span class="card-icon" style="color:#8a99b7;">&#x223F;</span>
+      </div>
+      <div class="card-value">6</div>
+      <div class="card-desc">Havaittu, käynnissä, keskeytetty, käsitelty tai vähennetty</div>
+    </div>
+    <div class="dashboard-card">
+      <div class="card-header">
+        <span class="card-title">Korkean tason riskejä </span>
+        <span class="card-icon" style="color:#de350b;">&#9888;</span>
+      </div>
+      <div class="card-value" style="color:#de350b;">1</div>
+      <div class="card-desc" style="color:#8a99b7;">16,7% kokonaisuudesta</div>
+    </div>
+    <div class="dashboard-card">
+      <div class="card-header">
+        <span class="card-title">Aktiivisia riskejä</span>
+        <span class="card-icon" style="color:#ff9900;">&#x2934;</span>
+      </div>
+      <div class="card-value" style="color:#ff9900;">1</div>
+      <div class="card-desc" style="color:#8a99b7;">16,7% kokonaisuudesta</div>
+    </div>
+    <div class="dashboard-card">
+      <div class="card-header">
+        <span class="card-title">Suljettuja, mitigoituja tai käsiteltyjä riskejä</span>
+        <span class="card-icon" style="color:#22bb66;">&#x2714;</span>
+      </div>
+      <div class="card-value" style="color:#22bb66;">4</div>
+      <div class="card-desc" style="color:#8a99b7;">66,6% kokonaisuudesta</div>
+    </div>
+  </div>
+
   <div class="grid4">
     <!-- Riskimatriisi -->
     <div class="box">
